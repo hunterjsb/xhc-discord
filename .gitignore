@@ -1,3 +1,4 @@
 .outputs/
 sdks/
 xhc-discord
+.env

@@ -40,6 +40,16 @@ func main() {
 			return err
 		}
 
+		// Members
+		if err := createMembers(ctx, serverIdInput, roles); err != nil {
+			return err
+		}
+
+		// Messages
+		if err := createMessages(ctx, textChannels); err != nil {
+			return err
+		}
+
 		// Exports
 		ctx.Export("serverId", pulumi.String(serverId))
 		ctx.Export("adminRoleId", roles.Admin.ID())
