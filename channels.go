@@ -7,7 +7,7 @@ import (
 
 type TextChannels struct {
 	Rules        *discord.TextChannel
-	Announcements *discord.TextChannel
+	Announcements *discord.NewsChannel
 	ServerStatus *discord.TextChannel
 	General      *discord.TextChannel
 	Media        *discord.TextChannel
@@ -37,7 +37,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		return nil, err
 	}
 
-	announcements, err := discord.NewTextChannel(ctx, "announcements", &discord.TextChannelArgs{
+	announcements, err := discord.NewNewsChannel(ctx, "announcements", &discord.NewsChannelArgs{
 		ServerId: serverId,
 		Name:     pulumi.String("announcements"),
 		Topic:    pulumi.String("Server news and updates"),
