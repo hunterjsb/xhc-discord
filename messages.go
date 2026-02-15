@@ -6,7 +6,42 @@ import (
 )
 
 func createMessages(ctx *pulumi.Context, textChannels *TextChannels) error {
-	_, err := discord.NewMessage(ctx, "rules-message", &discord.MessageArgs{
+	// Server info pinned in #server-status
+	_, err := discord.NewMessage(ctx, "server-info-message", &discord.MessageArgs{
+		ChannelId: textChannels.ServerStatus.ChannelId,
+		Pinned:    pulumi.Bool(true),
+		Embed: discord.MessageEmbedArgs{
+			Title:       pulumi.String("Server Info"),
+			Description: pulumi.String("Everything you need to connect and stay informed."),
+			Color:       pulumi.Float64(0x3498DB),
+			Fields: discord.MessageEmbedFieldArray{
+				discord.MessageEmbedFieldArgs{
+					Name:   pulumi.String("Server IP"),
+					Value:  pulumi.String("`mc.xandaris.space`"),
+					Inline: pulumi.Bool(true),
+				},
+				discord.MessageEmbedFieldArgs{
+					Name:   pulumi.String("Website"),
+					Value:  pulumi.String("[xandaris.space](https://xandaris.space)"),
+					Inline: pulumi.Bool(true),
+				},
+				discord.MessageEmbedFieldArgs{
+					Name:   pulumi.String("Status Page"),
+					Value:  pulumi.String("[xnmc.statuspage.io](https://xnmc.statuspage.io)"),
+					Inline: pulumi.Bool(true),
+				},
+			},
+			Footer: discord.MessageEmbedFooterArgs{
+				Text: pulumi.String("Last updated by Pulumi IaC — modify in code, not in Discord"),
+			},
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	// Rules pinned in #rules
+	_, err = discord.NewMessage(ctx, "rules-message", &discord.MessageArgs{
 		ChannelId: textChannels.Rules.ChannelId,
 		Pinned:    pulumi.Bool(true),
 		Embed: discord.MessageEmbedArgs{
