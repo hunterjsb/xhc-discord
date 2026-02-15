@@ -1,0 +1,74 @@
+name: Deploy Discord Server
+on:
+  workflow_dispatch:
+    inputs:
+      triggered_by:
+        description: 'Workflow that triggered this deployment'
+        required: false
+        default: 'manual'
+  push:
+    branches: [main]
+    paths:
+      - '*.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Pulumi.yaml'
+      - 'Pulumi.prod.yaml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Install Pulumi CLI
+        uses: pulumi/setup-pulumi@v2
+
+      - name: Install Discord provider
+        run: pulumi package add terraform-provider lucky3028/discord
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Install Go dependencies
+        run: go mod download
+
+      - name: Login to Pulumi
+        run: pulumi login
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Set Pulumi config
+        run: |
+          pulumi stack select prod
+          pulumi config set xhc-discord:serverId ${{ secrets.DISCORD_SERVER_ID }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Deploy Discord server
+        uses: pulumi/actions@v6
+        with:
+          command: up
+          stack-name: prod
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+
+      - name: Export Pulumi outputs
+        run: |
+          mkdir -p .outputs
+          pulumi stack output --json > .outputs/resources.json
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .outputs/resources.json
+          git commit -m "Update Pulumi resource outputs [skip ci]" || echo "No changes to commit"
+          git push
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
