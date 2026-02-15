@@ -1,0 +1,20 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/xhc-discord/prod",
+        "latest": {
+            "manifest": {
+                "time": "2026-02-15T16:01:25.315782444-05:00",
+                "magic": "22b7de8b0b797cfdc538c94a4e1b81eae77789956bbf6ad52b70e5ebbf1f68c0",
+                "version": "v3.220.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:jfaYtxsqvGs=:v1:glJeVADC2gMwDoio:O/gJzvJ/2F/2qsCGqMm3AXt5Svu9Eg=="
+                }
+            },
+            "metadata": {}
+        }
+    }
+}

@@ -20,7 +20,6 @@ func createRoles(ctx *pulumi.Context, serverId pulumi.StringInput) (*Roles, erro
 		Permissions: pulumi.Float64(PermAdministrator),
 		Hoist:       pulumi.Bool(true),
 		Mentionable: pulumi.Bool(true),
-		Position:    pulumi.Float64(4),
 	})
 	if err != nil {
 		return nil, err
@@ -33,7 +32,6 @@ func createRoles(ctx *pulumi.Context, serverId pulumi.StringInput) (*Roles, erro
 		Permissions: pulumi.Float64(PermModerator),
 		Hoist:       pulumi.Bool(true),
 		Mentionable: pulumi.Bool(true),
-		Position:    pulumi.Float64(3),
 	})
 	if err != nil {
 		return nil, err
@@ -46,7 +44,6 @@ func createRoles(ctx *pulumi.Context, serverId pulumi.StringInput) (*Roles, erro
 		Permissions: pulumi.Float64(PermPlayer),
 		Hoist:       pulumi.Bool(true),
 		Mentionable: pulumi.Bool(true),
-		Position:    pulumi.Float64(2),
 	})
 	if err != nil {
 		return nil, err
@@ -59,7 +56,6 @@ func createRoles(ctx *pulumi.Context, serverId pulumi.StringInput) (*Roles, erro
 		Permissions: pulumi.Float64(PermDead),
 		Hoist:       pulumi.Bool(true),
 		Mentionable: pulumi.Bool(true),
-		Position:    pulumi.Float64(1),
 	})
 	if err != nil {
 		return nil, err
