@@ -49,6 +49,19 @@ func createPermissions(
 		return err
 	}
 
+	// --- Dev Console: Deny Moderator (Ensure Admin-only) ---
+
+	_, err = discord.NewChannelPermission(ctx, "dev-console-deny-mod", &discord.ChannelPermissionArgs{
+		ChannelId:   textChannels.DevConsole.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Moderator.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(0),
+		Deny:        pulumi.Float64(PermTextAll),
+	})
+	if err != nil {
+		return err
+	}
+
 	// --- Dead role: deny SEND_MESSAGES and SPEAK on all public text channels ---
 
 	deadDenyBits := float64(PermSendMessages | PermSpeak)
@@ -59,6 +72,7 @@ func createPermissions(
 		"server-status": textChannels.ServerStatus.ChannelId,
 		"general":       textChannels.General.ChannelId,
 		"media":         textChannels.Media.ChannelId,
+		"bot-commands":  textChannels.BotCommands.ChannelId,
 		"coordinates":   textChannels.Coordinates.ChannelId,
 		"builds":        textChannels.Builds.ChannelId,
 		"deaths":        textChannels.Deaths.ChannelId,

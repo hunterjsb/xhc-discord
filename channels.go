@@ -6,17 +6,19 @@ import (
 )
 
 type TextChannels struct {
-	Rules        *discord.TextChannel
+	Rules         *discord.TextChannel
 	Announcements *discord.NewsChannel
-	ServerStatus *discord.TextChannel
-	General      *discord.TextChannel
-	Media        *discord.TextChannel
-	Coordinates  *discord.TextChannel
-	Builds       *discord.TextChannel
-	Deaths       *discord.TextChannel
-	Trading      *discord.TextChannel
-	AdminChat    *discord.TextChannel
-	ModLog       *discord.TextChannel
+	ServerStatus  *discord.TextChannel
+	General       *discord.TextChannel
+	Media         *discord.TextChannel
+	BotCommands   *discord.TextChannel
+	Coordinates   *discord.TextChannel
+	Builds        *discord.TextChannel
+	Deaths        *discord.TextChannel
+	Trading       *discord.TextChannel
+	AdminChat     *discord.TextChannel
+	ModLog        *discord.TextChannel
+	DevConsole    *discord.TextChannel
 }
 
 type VoiceChannels struct {
@@ -77,6 +79,17 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Topic:    pulumi.String("Screenshots and clips"),
 		Category: cats.General.ChannelId,
 		Position: pulumi.Float64(1),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	botCommands, err := discord.NewTextChannel(ctx, "bot-commands", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("bot-commands"),
+		Topic:    pulumi.String("Public bot commands"),
+		Category: cats.General.ChannelId,
+		Position: pulumi.Float64(2),
 	})
 	if err != nil {
 		return nil, err
@@ -150,18 +163,31 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		return nil, err
 	}
 
+	devConsole, err := discord.NewTextChannel(ctx, "dev-console", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("dev-console"),
+		Topic:    pulumi.String("Server console and commands - Admin only"),
+		Category: cats.Admin.ChannelId,
+		Position: pulumi.Float64(2),
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	return &TextChannels{
 		Rules:         rules,
 		Announcements: announcements,
 		ServerStatus:  serverStatus,
 		General:       general,
 		Media:         media,
+		BotCommands:   botCommands,
 		Coordinates:   coordinates,
 		Builds:        builds,
 		Deaths:        deaths,
 		Trading:       trading,
 		AdminChat:     adminChat,
 		ModLog:        modLog,
+		DevConsole:    devConsole,
 	}, nil
 }
 
