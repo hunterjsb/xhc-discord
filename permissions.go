@@ -51,8 +51,8 @@ func createPermissions(
 
 	// --- Dev Console: Deny Moderator (Ensure Admin-only) ---
 
-	_, err = discord.NewChannelPermission(ctx, "dev-console-deny-mod", &discord.ChannelPermissionArgs{
-		ChannelId:   textChannels.DevConsole.ChannelId,
+	_, err = discord.NewChannelPermission(ctx, "dev-server-console-deny-mod", &discord.ChannelPermissionArgs{
+		ChannelId:   textChannels.DevServerConsole.ChannelId,
 		Type:        pulumi.String("role"),
 		OverwriteId: roles.Moderator.ID().ToStringOutput(),
 		Allow:       pulumi.Float64(0),

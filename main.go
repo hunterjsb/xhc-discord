@@ -60,7 +60,8 @@ func main() {
 		ctx.Export("rulesChannelId", textChannels.Rules.ChannelId)
 		ctx.Export("announcementsChannelId", textChannels.Announcements.ChannelId)
 		ctx.Export("botCommandsChannelId", textChannels.BotCommands.ChannelId)
-		ctx.Export("devConsoleChannelId", textChannels.DevConsole.ChannelId)
+		ctx.Export("serverConsoleChannelId", textChannels.ServerConsole.ChannelId)
+		ctx.Export("devServerConsoleChannelId", textChannels.DevServerConsole.ChannelId)
 
 		return nil
 	})
