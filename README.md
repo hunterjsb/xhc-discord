@@ -41,3 +41,15 @@ This repository contains the Infrastructure as Code (IaC) for the Xandaris Hardc
 - `permissions.go`: Custom permission logic and overrides.
 - `messages.go`: Automated message embeds.
 - `state/`: Local Pulumi state storage.
+
+## Managing Player Deaths
+
+According to **Rule 3: Death is Permanent**, players who die in-game are assigned the **Dead** role, which restricts them from sending messages or speaking in voice channels.
+
+### Technical Procedure for Role Restoration
+
+While the server policy is "no appeals," administrators can technically restore a player's access by following these steps:
+
+1. **Modify `members.go`**: Locate the user's entry in the `createMembers` function.
+2. **Update the Role**: Change the `RoleId` from `roles.Dead.ID().ToStringOutput()` back to `roles.Player.ID().ToStringOutput()`.
+3. **Deploy Changes**: Commit and push the change to the `main` branch. The GitHub Actions workflow will automatically run `pulumi up` to apply the role change on the Discord server.
