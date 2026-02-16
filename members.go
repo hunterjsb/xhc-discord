@@ -53,6 +53,23 @@ func createMembers(ctx *pulumi.Context, serverId pulumi.StringInput, roles *Role
 		return err
 	}
 
+	// --- Players ---
+
+	// S00ps — Player role
+	_, err = discord.NewMemberRoles(ctx, "s00ps", &discord.MemberRolesArgs{
+		ServerId: serverId,
+		UserId:   pulumi.String("257341965601865738"),
+		Roles: discord.MemberRolesRoleArray{
+			discord.MemberRolesRoleArgs{
+				RoleId:  roles.Player.ID().ToStringOutput(),
+				HasRole: pulumi.Bool(true),
+			},
+		},
+	})
+	if err != nil {
+		return err
+	}
+
 	// --- Moderators ---
 
 	// Example Moderator Assignment:
