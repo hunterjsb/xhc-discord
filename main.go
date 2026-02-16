@@ -59,6 +59,8 @@ func main() {
 		ctx.Export("generalChannelId", textChannels.General.ChannelId)
 		ctx.Export("rulesChannelId", textChannels.Rules.ChannelId)
 		ctx.Export("announcementsChannelId", textChannels.Announcements.ChannelId)
+		ctx.Export("botCommandsChannelId", textChannels.BotCommands.ChannelId)
+		ctx.Export("devConsoleChannelId", textChannels.DevConsole.ChannelId)
 
 		return nil
 	})

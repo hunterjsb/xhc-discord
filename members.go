@@ -6,6 +6,8 @@ import (
 )
 
 func createMembers(ctx *pulumi.Context, serverId pulumi.StringInput, roles *Roles) error {
+	// --- Administrators ---
+
 	// Hunter — server owner, Admin role
 	_, err := discord.NewMemberRoles(ctx, "hunter", &discord.MemberRolesArgs{
 		ServerId: serverId,
@@ -47,5 +49,29 @@ func createMembers(ctx *pulumi.Context, serverId pulumi.StringInput, roles *Role
 			},
 		},
 	})
-	return err
+	if err != nil {
+		return err
+	}
+
+	// --- Moderators ---
+
+	// Example Moderator Assignment:
+	// To assign a moderator, uncomment the block below and replace the UserId.
+	/*
+		_, err = discord.NewMemberRoles(ctx, "example-mod", &discord.MemberRolesArgs{
+			ServerId: serverId,
+			UserId:   pulumi.String("MODERATOR_USER_ID_HERE"),
+			Roles: discord.MemberRolesRoleArray{
+				discord.MemberRolesRoleArgs{
+					RoleId:  roles.Moderator.ID().ToStringOutput(),
+					HasRole: pulumi.Bool(true),
+				},
+			},
+		})
+		if err != nil {
+			return err
+		}
+	*/
+
+	return nil
 }
