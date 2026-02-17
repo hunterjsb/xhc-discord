@@ -8,6 +8,7 @@ import (
 type Roles struct {
 	Admin     *discord.Role
 	Moderator *discord.Role
+	Staff     *discord.Role
 	Player    *discord.Role
 	Dead      *discord.Role
 }
@@ -31,6 +32,18 @@ func createRoles(ctx *pulumi.Context, serverId pulumi.StringInput) (*Roles, erro
 		Color:       pulumi.Float64(0x00FF00),
 		Permissions: pulumi.Float64(PermModerator),
 		Hoist:       pulumi.Bool(true),
+		Mentionable: pulumi.Bool(true),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	staff, err := discord.NewRole(ctx, "staff", &discord.RoleArgs{
+		ServerId:    serverId,
+		Name:        pulumi.String("Staff"),
+		Color:       pulumi.Float64(0),
+		Permissions: pulumi.Float64(PermModerator),
+		Hoist:       pulumi.Bool(false),
 		Mentionable: pulumi.Bool(true),
 	})
 	if err != nil {
@@ -64,6 +77,7 @@ func createRoles(ctx *pulumi.Context, serverId pulumi.StringInput) (*Roles, erro
 	return &Roles{
 		Admin:     admin,
 		Moderator: moderator,
+		Staff:     staff,
 		Player:    player,
 		Dead:      dead,
 	}, nil

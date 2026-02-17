@@ -49,7 +49,20 @@ func createPermissions(
 		return err
 	}
 
-	// --- Dev Console: Deny Moderator (Ensure Admin-only) ---
+	// --- Deny Moderator on admin-chat (admin-only) ---
+
+	_, err = discord.NewChannelPermission(ctx, "admin-chat-deny-mod", &discord.ChannelPermissionArgs{
+		ChannelId:   textChannels.AdminChat.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Moderator.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(0),
+		Deny:        pulumi.Float64(PermTextAll),
+	})
+	if err != nil {
+		return err
+	}
+
+	// --- Deny Moderator on dev-server-console (admin + staff only) ---
 
 	_, err = discord.NewChannelPermission(ctx, "dev-server-console-deny-mod", &discord.ChannelPermissionArgs{
 		ChannelId:   textChannels.DevServerConsole.ChannelId,
@@ -60,6 +73,28 @@ func createPermissions(
 	})
 	if err != nil {
 		return err
+	}
+
+	// --- Staff role: allow on mod-chat, mod-log, server-console, dev-server-console ---
+
+	staffChannels := map[string]pulumi.StringOutput{
+		"mod-chat":           textChannels.ModChat.ChannelId,
+		"mod-log":            textChannels.ModLog.ChannelId,
+		"server-console":     textChannels.ServerConsole.ChannelId,
+		"dev-server-console": textChannels.DevServerConsole.ChannelId,
+	}
+
+	for chName, chID := range staffChannels {
+		_, err = discord.NewChannelPermission(ctx, "staff-allow-"+chName, &discord.ChannelPermissionArgs{
+			ChannelId:   chID,
+			Type:        pulumi.String("role"),
+			OverwriteId: roles.Staff.ID().ToStringOutput(),
+			Allow:       pulumi.Float64(PermTextAll),
+			Deny:        pulumi.Float64(0),
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	// --- Dead role: deny SEND_MESSAGES and SPEAK on all public text channels ---

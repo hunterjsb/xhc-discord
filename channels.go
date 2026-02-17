@@ -16,7 +16,8 @@ type TextChannels struct {
 	Builds        *discord.TextChannel
 	Deaths        *discord.TextChannel
 	Trading       *discord.TextChannel
-	AdminChat     *discord.TextChannel
+	AdminChat        *discord.TextChannel
+	ModChat          *discord.TextChannel
 	ModLog           *discord.TextChannel
 	ServerConsole    *discord.TextChannel
 	DevServerConsole *discord.TextChannel
@@ -153,12 +154,23 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		return nil, err
 	}
 
+	modChat, err := discord.NewTextChannel(ctx, "mod-chat", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("mod-chat"),
+		Topic:    pulumi.String("Staff discussion"),
+		Category: cats.Admin.ChannelId,
+		Position: pulumi.Float64(1),
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	modLog, err := discord.NewTextChannel(ctx, "mod-log", &discord.TextChannelArgs{
 		ServerId: serverId,
 		Name:     pulumi.String("mod-log"),
 		Topic:    pulumi.String("Moderation log"),
 		Category: cats.Admin.ChannelId,
-		Position: pulumi.Float64(1),
+		Position: pulumi.Float64(2),
 	})
 	if err != nil {
 		return nil, err
@@ -169,7 +181,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Name:     pulumi.String("server-console"),
 		Topic:    pulumi.String("Server console and commands - Moderator and Admin access"),
 		Category: cats.Admin.ChannelId,
-		Position: pulumi.Float64(2),
+		Position: pulumi.Float64(3),
 	})
 	if err != nil {
 		return nil, err
@@ -180,7 +192,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Name:     pulumi.String("dev-server-console"),
 		Topic:    pulumi.String("Server console and commands - Admin only"),
 		Category: cats.Admin.ChannelId,
-		Position: pulumi.Float64(3),
+		Position: pulumi.Float64(4),
 	})
 	if err != nil {
 		return nil, err
@@ -198,6 +210,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Deaths:           deaths,
 		Trading:          trading,
 		AdminChat:        adminChat,
+		ModChat:          modChat,
 		ModLog:           modLog,
 		ServerConsole:    serverConsole,
 		DevServerConsole: devServerConsole,

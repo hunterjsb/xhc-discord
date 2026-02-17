@@ -17,12 +17,14 @@ const (
 	PermMuteMembers        = 0x00400000
 	PermDeafenMembers      = 0x00800000
 	PermMoveMembers        = 0x01000000
+	PermStream             = 0x00000200
 )
 
 // Composite permission sets.
 const (
 	PermPlayer = PermViewChannel | PermSendMessages | PermEmbedLinks |
-		PermAttachFiles | PermReadMessageHistory | PermConnect | PermSpeak
+		PermAttachFiles | PermReadMessageHistory | PermConnect | PermSpeak |
+		PermStream
 
 	PermDead = PermViewChannel | PermReadMessageHistory | PermConnect
 

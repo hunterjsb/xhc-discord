@@ -23,21 +23,6 @@ func createMembers(ctx *pulumi.Context, serverId pulumi.StringInput, roles *Role
 		return err
 	}
 
-	// Lionclad — Admin role
-	_, err = discord.NewMemberRoles(ctx, "lionclad", &discord.MemberRolesArgs{
-		ServerId: serverId,
-		UserId:   pulumi.String("1291416111916515378"),
-		Roles: discord.MemberRolesRoleArray{
-			discord.MemberRolesRoleArgs{
-				RoleId:  roles.Admin.ID().ToStringOutput(),
-				HasRole: pulumi.Bool(true),
-			},
-		},
-	})
-	if err != nil {
-		return err
-	}
-
 	// Ed — Admin role
 	_, err = discord.NewMemberRoles(ctx, "ed", &discord.MemberRolesArgs{
 		ServerId: serverId,
