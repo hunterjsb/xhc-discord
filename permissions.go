@@ -62,14 +62,60 @@ func createPermissions(
 		return err
 	}
 
-	// --- Deny Moderator on admin VC (admin-only) ---
+	// --- Admin VC: deny @everyone, allow admin only ---
 
-	_, err = discord.NewChannelPermission(ctx, "admin-vc-deny-mod", &discord.ChannelPermissionArgs{
+	_, err = discord.NewChannelPermission(ctx, "admin-vc-deny-everyone", &discord.ChannelPermissionArgs{
 		ChannelId:   voiceChannels.Admin.ChannelId,
 		Type:        pulumi.String("role"),
-		OverwriteId: roles.Moderator.ID().ToStringOutput(),
+		OverwriteId: serverId,
 		Allow:       pulumi.Float64(0),
-		Deny:        pulumi.Float64(PermConnect | PermSpeak),
+		Deny:        pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = discord.NewChannelPermission(ctx, "admin-vc-allow-admin", &discord.ChannelPermissionArgs{
+		ChannelId:   voiceChannels.Admin.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Admin.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
+		Deny:        pulumi.Float64(0),
+	})
+	if err != nil {
+		return err
+	}
+
+	// --- Mod VC: deny @everyone, allow admin + mod ---
+
+	_, err = discord.NewChannelPermission(ctx, "mod-vc-deny-everyone", &discord.ChannelPermissionArgs{
+		ChannelId:   voiceChannels.Mod.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: serverId,
+		Allow:       pulumi.Float64(0),
+		Deny:        pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = discord.NewChannelPermission(ctx, "mod-vc-allow-admin", &discord.ChannelPermissionArgs{
+		ChannelId:   voiceChannels.Mod.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Admin.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
+		Deny:        pulumi.Float64(0),
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = discord.NewChannelPermission(ctx, "mod-vc-allow-mod", &discord.ChannelPermissionArgs{
+		ChannelId:   voiceChannels.Mod.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Moderator.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
+		Deny:        pulumi.Float64(0),
 	})
 	if err != nil {
 		return err

@@ -272,8 +272,8 @@ func createVoiceChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats 
 	adminVc, err := discord.NewVoiceChannel(ctx, "admin-voice", &discord.VoiceChannelArgs{
 		ServerId: serverId,
 		Name:     pulumi.String("Admin VC"),
-		Category: cats.Admin.ChannelId,
-		Position: pulumi.Float64(5),
+		Category: cats.Voice.ChannelId,
+		Position: pulumi.Float64(2),
 		Bitrate:  pulumi.Float64(64000),
 	})
 	if err != nil {
@@ -283,8 +283,8 @@ func createVoiceChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats 
 	modVc, err := discord.NewVoiceChannel(ctx, "mod-voice", &discord.VoiceChannelArgs{
 		ServerId: serverId,
 		Name:     pulumi.String("Mod VC"),
-		Category: cats.Admin.ChannelId,
-		Position: pulumi.Float64(6),
+		Category: cats.Voice.ChannelId,
+		Position: pulumi.Float64(3),
 		Bitrate:  pulumi.Float64(64000),
 	})
 	if err != nil {
