@@ -28,6 +28,8 @@ type TextChannels struct {
 type VoiceChannels struct {
 	General *discord.VoiceChannel
 	Gaming  *discord.VoiceChannel
+	Admin   *discord.VoiceChannel
+	Mod     *discord.VoiceChannel
 }
 
 func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *Categories) (*TextChannels, error) {
@@ -267,8 +269,32 @@ func createVoiceChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats 
 		return nil, err
 	}
 
+	adminVc, err := discord.NewVoiceChannel(ctx, "admin-voice", &discord.VoiceChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("Admin VC"),
+		Category: cats.Admin.ChannelId,
+		Position: pulumi.Float64(5),
+		Bitrate:  pulumi.Float64(64000),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	modVc, err := discord.NewVoiceChannel(ctx, "mod-voice", &discord.VoiceChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("Mod VC"),
+		Category: cats.Admin.ChannelId,
+		Position: pulumi.Float64(6),
+		Bitrate:  pulumi.Float64(64000),
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	return &VoiceChannels{
 		General: general,
 		Gaming:  gaming,
+		Admin:   adminVc,
+		Mod:     modVc,
 	}, nil
 }

@@ -62,6 +62,19 @@ func createPermissions(
 		return err
 	}
 
+	// --- Deny Moderator on admin VC (admin-only) ---
+
+	_, err = discord.NewChannelPermission(ctx, "admin-vc-deny-mod", &discord.ChannelPermissionArgs{
+		ChannelId:   voiceChannels.Admin.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Moderator.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(0),
+		Deny:        pulumi.Float64(PermConnect | PermSpeak),
+	})
+	if err != nil {
+		return err
+	}
+
 	// --- Deny Moderator on dev-server-console (admin + staff only) ---
 
 	_, err = discord.NewChannelPermission(ctx, "dev-server-console-deny-mod", &discord.ChannelPermissionArgs{
