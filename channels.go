@@ -16,6 +16,8 @@ type TextChannels struct {
 	Builds        *discord.TextChannel
 	Deaths        *discord.TextChannel
 	Trading       *discord.TextChannel
+	Donate           *discord.TextChannel
+	Links            *discord.TextChannel
 	AdminChat        *discord.TextChannel
 	ModChat          *discord.TextChannel
 	ModLog           *discord.TextChannel
@@ -58,6 +60,28 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Topic:    pulumi.String("IP, connection info, uptime"),
 		Category: cats.Info.ChannelId,
 		Position: pulumi.Float64(2),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	donate, err := discord.NewTextChannel(ctx, "donate", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("donate"),
+		Topic:    pulumi.String("Support the server — donation tiers and perks"),
+		Category: cats.Info.ChannelId,
+		Position: pulumi.Float64(3),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	links, err := discord.NewTextChannel(ctx, "links", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("links"),
+		Topic:    pulumi.String("Voting, wiki, and community links"),
+		Category: cats.Info.ChannelId,
+		Position: pulumi.Float64(4),
 	})
 	if err != nil {
 		return nil, err
@@ -209,6 +233,8 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Builds:           builds,
 		Deaths:           deaths,
 		Trading:          trading,
+		Donate:           donate,
+		Links:            links,
 		AdminChat:        adminChat,
 		ModChat:          modChat,
 		ModLog:           modLog,
