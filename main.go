@@ -55,6 +55,7 @@ func main() {
 		ctx.Export("adminRoleId", roles.Admin.ID())
 		ctx.Export("moderatorRoleId", roles.Moderator.ID())
 		ctx.Export("playerRoleId", roles.Player.ID())
+		ctx.Export("staffRoleId", roles.Staff.ID())
 		ctx.Export("deadRoleId", roles.Dead.ID())
 		ctx.Export("generalChannelId", textChannels.General.ChannelId)
 		ctx.Export("rulesChannelId", textChannels.Rules.ChannelId)
