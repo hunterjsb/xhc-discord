@@ -55,25 +55,22 @@ func createMembers(ctx *pulumi.Context, serverId pulumi.StringInput, roles *Role
 		return err
 	}
 
-	// --- Moderators ---
+	// --- Moderators / Staff ---
 
-	// Example Moderator Assignment:
-	// To assign a moderator, uncomment the block below and replace the UserId.
-	/*
-		_, err = discord.NewMemberRoles(ctx, "example-mod", &discord.MemberRolesArgs{
-			ServerId: serverId,
-			UserId:   pulumi.String("MODERATOR_USER_ID_HERE"),
-			Roles: discord.MemberRolesRoleArray{
-				discord.MemberRolesRoleArgs{
-					RoleId:  roles.Moderator.ID().ToStringOutput(),
-					HasRole: pulumi.Bool(true),
-				},
+	// Temptest — Moderator + Staff
+	_, err = discord.NewMemberRoles(ctx, "temptest", &discord.MemberRolesArgs{
+		ServerId: serverId,
+		UserId:   pulumi.String("166272880462528513"),
+		Roles: discord.MemberRolesRoleArray{
+			discord.MemberRolesRoleArgs{
+				RoleId:  roles.Moderator.ID().ToStringOutput(),
+				HasRole: pulumi.Bool(true),
 			},
-		})
-		if err != nil {
-			return err
-		}
-	*/
-
-	return nil
+			discord.MemberRolesRoleArgs{
+				RoleId:  roles.Staff.ID().ToStringOutput(),
+				HasRole: pulumi.Bool(true),
+			},
+		},
+	})
+	return err
 }
