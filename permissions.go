@@ -202,8 +202,7 @@ func createPermissions(
 		"general":       textChannels.General.ChannelId,
 		"media":         textChannels.Media.ChannelId,
 		"bot-commands":  textChannels.BotCommands.ChannelId,
-		"coordinates":   textChannels.Coordinates.ChannelId,
-		"builds":        textChannels.Builds.ChannelId,
+		"server-chat":   textChannels.ServerChat.ChannelId,
 		"deaths":        textChannels.Deaths.ChannelId,
 		"trading":       textChannels.Trading.ChannelId,
 	}

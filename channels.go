@@ -12,8 +12,7 @@ type TextChannels struct {
 	General       *discord.TextChannel
 	Media         *discord.TextChannel
 	BotCommands   *discord.TextChannel
-	Coordinates   *discord.TextChannel
-	Builds        *discord.TextChannel
+	ServerChat    *discord.TextChannel
 	Deaths        *discord.TextChannel
 	Trading       *discord.TextChannel
 	Donate           *discord.TextChannel
@@ -124,23 +123,12 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 	}
 
 	// Game channels
-	coordinates, err := discord.NewTextChannel(ctx, "coordinates", &discord.TextChannelArgs{
+	serverChat, err := discord.NewTextChannel(ctx, "server-chat", &discord.TextChannelArgs{
 		ServerId: serverId,
-		Name:     pulumi.String("coordinates"),
-		Topic:    pulumi.String("Share base/POI coords"),
+		Name:     pulumi.String("server-chat"),
+		Topic:    pulumi.String("In-game discussion"),
 		Category: cats.Game.ChannelId,
 		Position: pulumi.Float64(0),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	builds, err := discord.NewTextChannel(ctx, "builds", &discord.TextChannelArgs{
-		ServerId: serverId,
-		Name:     pulumi.String("builds"),
-		Topic:    pulumi.String("Build showcases"),
-		Category: cats.Game.ChannelId,
-		Position: pulumi.Float64(1),
 	})
 	if err != nil {
 		return nil, err
@@ -151,7 +139,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Name:     pulumi.String("deaths"),
 		Topic:    pulumi.String("Hall of the fallen"),
 		Category: cats.Game.ChannelId,
-		Position: pulumi.Float64(2),
+		Position: pulumi.Float64(1),
 	})
 	if err != nil {
 		return nil, err
@@ -162,7 +150,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Name:     pulumi.String("trading"),
 		Topic:    pulumi.String("Item trading"),
 		Category: cats.Game.ChannelId,
-		Position: pulumi.Float64(3),
+		Position: pulumi.Float64(2),
 	})
 	if err != nil {
 		return nil, err
@@ -231,8 +219,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		General:          general,
 		Media:            media,
 		BotCommands:      botCommands,
-		Coordinates:      coordinates,
-		Builds:           builds,
+		ServerChat:       serverChat,
 		Deaths:           deaths,
 		Trading:          trading,
 		Donate:           donate,
