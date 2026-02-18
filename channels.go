@@ -88,13 +88,24 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		return nil, err
 	}
 
-	// General channels
+	// Chat channels
 	general, err := discord.NewTextChannel(ctx, "general-text", &discord.TextChannelArgs{
 		ServerId: serverId,
 		Name:     pulumi.String("general"),
 		Topic:    pulumi.String("Main chat"),
-		Category: cats.General.ChannelId,
+		Category: cats.Game.ChannelId,
 		Position: pulumi.Float64(0),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	serverChat, err := discord.NewTextChannel(ctx, "server-chat", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("server-chat"),
+		Topic:    pulumi.String("In-game discussion"),
+		Category: cats.Game.ChannelId,
+		Position: pulumi.Float64(1),
 	})
 	if err != nil {
 		return nil, err
@@ -104,31 +115,8 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		ServerId: serverId,
 		Name:     pulumi.String("media"),
 		Topic:    pulumi.String("Screenshots and clips"),
-		Category: cats.General.ChannelId,
-		Position: pulumi.Float64(1),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	botCommands, err := discord.NewTextChannel(ctx, "bot-commands", &discord.TextChannelArgs{
-		ServerId: serverId,
-		Name:     pulumi.String("bot-commands"),
-		Topic:    pulumi.String("Public bot commands"),
-		Category: cats.General.ChannelId,
-		Position: pulumi.Float64(2),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	// Game channels
-	serverChat, err := discord.NewTextChannel(ctx, "server-chat", &discord.TextChannelArgs{
-		ServerId: serverId,
-		Name:     pulumi.String("server-chat"),
-		Topic:    pulumi.String("In-game discussion"),
 		Category: cats.Game.ChannelId,
-		Position: pulumi.Float64(0),
+		Position: pulumi.Float64(2),
 	})
 	if err != nil {
 		return nil, err
@@ -139,7 +127,7 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Name:     pulumi.String("deaths"),
 		Topic:    pulumi.String("Hall of the fallen"),
 		Category: cats.Game.ChannelId,
-		Position: pulumi.Float64(1),
+		Position: pulumi.Float64(3),
 	})
 	if err != nil {
 		return nil, err
@@ -150,7 +138,18 @@ func createTextChannels(ctx *pulumi.Context, serverId pulumi.StringInput, cats *
 		Name:     pulumi.String("trading"),
 		Topic:    pulumi.String("Item trading"),
 		Category: cats.Game.ChannelId,
-		Position: pulumi.Float64(2),
+		Position: pulumi.Float64(4),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	botCommands, err := discord.NewTextChannel(ctx, "bot-commands", &discord.TextChannelArgs{
+		ServerId: serverId,
+		Name:     pulumi.String("bot-commands"),
+		Topic:    pulumi.String("Public bot commands"),
+		Category: cats.Game.ChannelId,
+		Position: pulumi.Float64(5),
 	})
 	if err != nil {
 		return nil, err
