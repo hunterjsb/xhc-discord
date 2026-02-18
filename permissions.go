@@ -49,6 +49,30 @@ func createPermissions(
 		return err
 	}
 
+	_, err = discord.NewChannelPermission(ctx, "admin-cat-allow-staff", &discord.ChannelPermissionArgs{
+		ChannelId:   cats.Admin.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Staff.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(PermTextAll),
+		Deny:        pulumi.Float64(0),
+	})
+	if err != nil {
+		return err
+	}
+
+	// --- Deny Staff on admin-chat (admin-only) ---
+
+	_, err = discord.NewChannelPermission(ctx, "admin-chat-deny-staff", &discord.ChannelPermissionArgs{
+		ChannelId:   textChannels.AdminChat.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Staff.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(0),
+		Deny:        pulumi.Float64(PermTextAll),
+	})
+	if err != nil {
+		return err
+	}
+
 	// --- Deny Moderator on admin-chat (admin-only) ---
 
 	_, err = discord.NewChannelPermission(ctx, "admin-chat-deny-mod", &discord.ChannelPermissionArgs{
@@ -114,6 +138,17 @@ func createPermissions(
 		ChannelId:   voiceChannels.Mod.ChannelId,
 		Type:        pulumi.String("role"),
 		OverwriteId: roles.Moderator.ID().ToStringOutput(),
+		Allow:       pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
+		Deny:        pulumi.Float64(0),
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = discord.NewChannelPermission(ctx, "mod-vc-allow-staff", &discord.ChannelPermissionArgs{
+		ChannelId:   voiceChannels.Mod.ChannelId,
+		Type:        pulumi.String("role"),
+		OverwriteId: roles.Staff.ID().ToStringOutput(),
 		Allow:       pulumi.Float64(PermConnect | PermSpeak | PermViewChannel),
 		Deny:        pulumi.Float64(0),
 	})
